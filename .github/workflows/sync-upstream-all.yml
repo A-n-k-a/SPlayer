@@ -16,6 +16,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.UPSTREAM_SYNC_TOKEN }}
 
+      - name: Configure git identity
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Add upstream and fetch
         run: |
           git remote add upstream https://github.com/imsyy/SPlayer.git
@@ -28,17 +33,17 @@ jobs:
           for branch in $(git branch -r | grep '^  upstream/' | grep -v 'HEAD' | sed 's|  upstream/||'); do
             echo "🔄 Syncing branch: $branch"
 
-            # 如果 fork 中已存在该分支
+            # fork 中已存在该分支
             if git show-ref --verify --quiet refs/heads/$branch; then
               git checkout $branch
 
-              # 使用 merge，同步失败直接退出
+              # 使用 merge；一旦冲突立即失败
               git merge upstream/$branch --no-edit || {
                 echo "❌ Merge conflict on branch: $branch"
                 exit 1
               }
             else
-              # fork 中没有该分支，直接创建
+              # fork 中不存在该分支，直接创建
               git checkout -b $branch upstream/$branch
             fi
 
