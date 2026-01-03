@@ -18,7 +18,7 @@ jobs:
 
       - name: Add upstream and fetch
         run: |
-          git remote add upstream https://github.com/upstream-owner/repo.git
+          git remote add upstream https://github.com/imsyy/SPlayer.git
           git fetch upstream --prune --tags
 
       - name: Sync all branches (fail on conflict)
