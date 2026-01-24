@@ -99,6 +99,12 @@ export interface SettingState {
   usePlaybackForDownload: boolean;
   /** 保存元信息文件 */
   saveMetaFile: boolean;
+  /** 使用解锁接口下载 */
+  useUnlockForDownload: boolean;
+  /** 内嵌暂逐字歌词 (beta) */
+  downloadMakeYrc: boolean;
+  /** 下载歌词文件编码 */
+  downloadLyricEncoding: "utf-8" | "gbk" | "utf-16" | "iso-8859-1";
   /** 默认下载音质（弹窗默认选项） */
   downloadSongLevel: SongLevelType;
   /** 代理协议 */
@@ -318,6 +324,10 @@ export interface SettingState {
   playerStyleRatio: number;
   /** 是否启用流媒体功能 */
   streamingEnabled: boolean;
+  /** Fuck AI: 开启后在所有的地方都不显示 Hi-res 以上的音质选项 */
+  disableAiAudio: boolean;
+  /** Fuck DJ: 开启后自动跳过 DJ 歌曲 */
+  disableDjMode: boolean;
 }
 
 export const useSettingStore = defineStore("setting", {
@@ -424,6 +434,9 @@ export const useSettingStore = defineStore("setting", {
     downloadLyricTranslation: true,
     downloadLyricRomaji: false,
     usePlaybackForDownload: false,
+    useUnlockForDownload: false,
+    downloadMakeYrc: false,
+    downloadLyricEncoding: "utf-8",
     saveMetaFile: false,
     downloadSongLevel: "h",
     proxyProtocol: "off",
@@ -484,6 +497,8 @@ export const useSettingStore = defineStore("setting", {
     customJs: "",
     playerStyleRatio: 50,
     streamingEnabled: false,
+    disableAiAudio: false,
+    disableDjMode: false,
   }),
   getters: {
     /**
