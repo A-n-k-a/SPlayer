@@ -62,6 +62,10 @@ interface StatusState {
   availableLyricSources: string[];
   /** 用户偏好的歌词源（用于切换） */
   preferredLyricSource: string | null;
+  /** 可用的音频源列表 */
+  availableAudioSources: string[];
+  /** 用户偏好的音频源（用于切换） */
+  preferredAudioSource: string | null;
   /** 当前歌曲音质 */
   songQuality: QualityType | undefined;
   /** 当前歌曲音源 */
@@ -90,6 +94,8 @@ interface StatusState {
   listSortOrder: SortOrder;
   /** 桌面歌词 */
   showDesktopLyric: boolean;
+  /** 任务栏歌词 */
+  showTaskbarLyric: boolean;
   /** 播放器评论 */
   showPlayerComment: boolean;
   /** 私人FM模式 */
@@ -172,6 +178,8 @@ export const useStatusStore = defineStore("status", {
     usingQRCLyric: false,
     availableLyricSources: [],
     preferredLyricSource: null,
+    availableAudioSources: [],
+    preferredAudioSource: null,
     songQuality: undefined,
     audioSource: undefined,
     playIndex: -1,
@@ -187,6 +195,7 @@ export const useStatusStore = defineStore("status", {
     listSortField: "default",
     listSortOrder: "default",
     showDesktopLyric: false,
+    showTaskbarLyric: false,
     showPlayerComment: false,
     updateCheck: false,
     eqEnabled: false,
@@ -410,6 +419,7 @@ export const useStatusStore = defineStore("status", {
       "listSortField",
       "listSortOrder",
       "showDesktopLyric",
+      "showTaskbarLyric",
       "personalFmMode",
       "autoClose",
       "eqEnabled",
