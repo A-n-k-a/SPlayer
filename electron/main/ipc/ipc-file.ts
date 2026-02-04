@@ -1,3 +1,4 @@
+import type { SongMetadata } from "@native/tools";
 import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
 import FastGlob from "fast-glob";
 import type { Options as GlobOptions } from "fast-glob/out/settings";
@@ -12,29 +13,8 @@ import { useStore } from "../store";
 import { getFileID, getFileMD5, metaDataLyricsArrayToLrc } from "../utils/helper";
 import { loadNativeModule } from "../utils/native-loader";
 
-interface SongMetadata {
-  title: string;
-  artist: string;
-  album: string;
-  coverUrl?: string;
-  lyric?: string;
-  description?: string;
-}
-
-interface ToolsModule {
-  downloadFile(
-    id: number,
-    url: string,
-    filePath: string,
-    metadata: SongMetadata | undefined | null,
-    threadCount: number,
-    onProgress: (err: any, progressJson: string) => void,
-  ): Promise<void>;
-  cancelDownload(id: number): void;
-  writeMusicMetadata(filePath: string, metadata: SongMetadata, coverPath?: string): Promise<void>;
-}
-
-const tools = loadNativeModule("tools.node", "tools") as ToolsModule;
+type toolModule = typeof import("@native/tools");
+const tools: toolModule = loadNativeModule("tools.node", "tools");
 
 interface DownloadProgress {
   percent: number;
@@ -529,6 +509,7 @@ const initFileIpc = (): void => {
         songData?: any;
         skipIfExist?: boolean;
         threadCount?: number;
+        referer?: string;
       } = {
         fileName: "未知文件名",
         fileType: "mp3",
@@ -551,6 +532,7 @@ const initFileIpc = (): void => {
           saveMetaFile,
           songData,
           skipIfExist,
+          referer,
         } = options;
         // 规范化路径
         const downloadPath = resolve(path);
@@ -561,7 +543,9 @@ const initFileIpc = (): void => {
           await mkdir(downloadPath, { recursive: true });
         }
 
-        const finalFilePath = join(downloadPath, `${fileName}.${fileType}`);
+        const finalFilePath = fileType 
+          ? join(downloadPath, `${fileName}.${fileType}`)
+          : join(downloadPath, fileName);
 
         // 检查文件是否存在
         if (skipIfExist) {
@@ -657,6 +641,7 @@ const initFileIpc = (): void => {
           finalFilePath,
           metadata,
           threadCount,
+          referer,
           onProgress,
         );
 
