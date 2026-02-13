@@ -60,12 +60,6 @@ importers:
       '@vueuse/integrations':
         specifier: ^14.1.0
         version: 14.1.0(async-validator@4.2.5)(axios@1.13.2)(change-case@5.4.4)(focus-trap@7.7.0)(fuse.js@7.1.0)(qrcode@1.5.4)(sortablejs@1.15.6)(vue@3.5.25(typescript@5.9.3))
-      axios:
-        specifier: ^1.13.2
-        version: 1.13.2
-      axios-retry:
-        specifier: ^4.5.0
-        version: 4.5.0(axios@1.13.2)
       better-sqlite3:
         specifier: ^12.5.0
         version: 12.5.0
@@ -81,9 +75,6 @@ importers:
       electron-updater:
         specifier: ^6.6.2
         version: 6.6.2
-      es-object-atoms:
-        specifier: ^1.1.1
-        version: 1.1.1
       file-saver:
         specifier: ^2.0.5
         version: 2.0.5
@@ -99,9 +90,6 @@ importers:
       github-markdown-css:
         specifier: ^5.8.1
         version: 5.8.1
-      iconv-lite:
-        specifier: ^0.7.2
-        version: 0.7.2
       js-cookie:
         specifier: ^3.0.5
         version: 3.0.5
@@ -193,6 +181,12 @@ importers:
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
+      axios:
+        specifier: ^1.13.2
+        version: 1.13.2
+      axios-retry:
+        specifier: ^4.5.0
+        version: 4.5.0(axios@1.13.2)
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
