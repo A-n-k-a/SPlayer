@@ -54,6 +54,30 @@ jobs:
           ref: dev
           fetch-depth: 0
 
+      - name: Clean workspace on Windows
+        if: runner.os == 'Windows'
+        run: |
+          Write-Host "🧹 Cleaning workspace, node_modules, Electron caches, and pnpm store..."
+          if (Test-Path dist) { Remove-Item -Recurse -Force dist }
+          if (Test-Path out) { Remove-Item -Recurse -Force out }
+          if (Test-Path node_modules) { Remove-Item -Recurse -Force node_modules }
+
+          if (Test-Path "$env:LOCALAPPDATA\electron-builder") {
+            Remove-Item "$env:LOCALAPPDATA\electron-builder" -Recurse -Force -ErrorAction SilentlyContinue
+          }
+          if (Test-Path "$env:LOCALAPPDATA\electron") {
+            Remove-Item "$env:LOCALAPPDATA\electron" -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+          if (Test-Path "$env:USERPROFILE\.pnpm-store") {
+            Remove-Item "$env:USERPROFILE\.pnpm-store" -Recurse -Force -ErrorAction SilentlyContinue
+          }
+      - name: Clean workspace on macOS & Linux
+        if: runner.os == 'macOS' || runner.os == 'Linux'
+        run: |
+          echo "🧹 Cleaning workspace, node_modules, Electron caches, and pnpm store..."
+          rm -rf dist out node_modules ~/.cache/electron-builder ~/.cache/electron ~/.pnpm-store
+
       # 执行分支同步
       - name: Sync dev-nightly branch
         if: matrix.os == 'windows-latest'
@@ -83,17 +107,13 @@ jobs:
           else
             echo ".env file already exists. Skipping the copy step."
           fi
-
+      # 设置 pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
-        with:
-          version: 10
-
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
-          cache: "pnpm"
 
       - name: Setup Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -213,10 +233,10 @@ jobs:
             if [[ "$LAST_TAG" == *"-nightly" ]]; then
                LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
             fi
-            
+
             if [ -z "$LAST_TAG" ]; then
                NOTES=$(git log -n 20 --pretty=format:"- %h %s")
-            else 
+            else
                NOTES=$(git log "$LAST_TAG"..HEAD --pretty=format:"- %h %s" | head -n 20)
                # 添加查看完整变更的链接
                COMPARE_URL="https://github.com/imsyy/SPlayer/compare/$LAST_TAG...HEAD"
