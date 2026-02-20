@@ -6,6 +6,8 @@ export interface TaskbarConfig {
   maxWidth: number;
   position: "automatic" | "left" | "right";
   autoShrink: boolean;
+  margin: number;
+  minWidth: number;
 
   enabled: boolean;
   showWhenPaused: boolean;
