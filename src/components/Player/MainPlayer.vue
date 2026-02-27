@@ -146,7 +146,12 @@
       <div
         v-if="statusStore.personalFmMode"
         class="play-icon"
-        v-debounce="() => songManager.personalFMTrash(musicStore.personalFMSong?.id)"
+        v-debounce="
+          () =>
+            songManager.personalFMTrash(musicStore.personalFMSong?.id, () =>
+              player.nextOrPrev('next'),
+            )
+        "
       >
         <SvgIcon class="icon" :size="18" name="ThumbDown" />
       </div>
@@ -325,11 +330,7 @@ const songMoreOptions = computed<DropdownOption[]>(() => {
           label: `分享${song.type === "song" ? "歌曲" : "节目"}链接`,
           show: !isLocal,
           props: {
-            onClick: () =>
-              copyData(
-                getShareUrl(song.type, song.id),
-                "已复制分享链接到剪切板",
-              ),
+            onClick: () => copyData(getShareUrl(song.type, song.id), "已复制分享链接到剪切板"),
           },
           icon: renderIcon("Share", { size: 18 }),
         },
@@ -414,7 +415,7 @@ const isShowLyrics = computed(() => {
 
 // 当前实时歌词
 const instantLyrics = computed(() => {
-  const isYrc = musicStore.songLyric.yrcData?.length && settingStore.showYrc;
+  const isYrc = musicStore.songLyric.yrcData?.length && settingStore.showWordLyrics;
   const content = isYrc
     ? musicStore.songLyric.yrcData[statusStore.lyricIndex]
     : musicStore.songLyric.lrcData[statusStore.lyricIndex];
